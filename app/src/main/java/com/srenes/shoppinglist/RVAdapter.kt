@@ -4,15 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.srenes.shoppinglist.domain.ShopItem
+import com.srenes.shoppinglist.presentation.ShopitemDiffCallback
 
-class RVAdapter : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
-    var shopItemList = listOf<ShopItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class RVAdapter : ListAdapter<ShopItem,RVAdapter.ViewHolder>(ShopitemDiffCallback()) {
 
     var onLongShopItemListener : ((ShopItem) -> Unit)? = null
     var onClickShopItemListener :((ShopItem) -> Unit)?= null
@@ -36,32 +33,40 @@ class RVAdapter : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
         return ViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return shopItemList.size
-    }
 
     override fun getItemViewType(position: Int): Int {
-        val item = shopItemList[position]
+        val item = getItem(position)
         return if (item.enabled){
             VIEW_TYPE_ENABLED
         }else{
             VIEW_TYPE_DISABLED
         }
     }
+    interface DataChangeListener {
+        fun onDataChange()
+    }
+
+    private var listener: DataChangeListener? = null
+
+    fun setDataChangeListener(listener: DataChangeListener) {
+        this.listener = listener
+    }
+
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val shopItem = shopItemList[position]
+        val shopItem = getItem(position)
         holder.tvName.text = shopItem.name
         holder.tvCount.text = shopItem.count.toString()
         holder.itemView.setOnLongClickListener{
             onLongShopItemListener?.invoke(shopItem)
+            listener?.onDataChange() // Вызов метода при изменении данных
             true
         }
         holder.itemView.setOnClickListener{
             onClickShopItemListener?.invoke(shopItem)
         }
-
     }
+
 
 
     companion object{

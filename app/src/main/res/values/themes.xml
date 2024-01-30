@@ -2,6 +2,8 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.ShoppingList" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="statusBarBackground">@color/recyclerBackgroundColor</item>
+        <item name="android:statusBarColor">@color/recyclerBackgroundColor</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 

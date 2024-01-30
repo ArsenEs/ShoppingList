@@ -2,7 +2,7 @@ package com.srenes.shoppinglist.domain
 
 import androidx.lifecycle.LiveData
 
-interface ShopListRepository {
+interface  ShopListRepository {
 
     fun addShopItem(shopItem: ShopItem)
 
